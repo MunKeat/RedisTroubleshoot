@@ -29,10 +29,10 @@ class TestRedisVerify(unittest.TestCase):
                      "print_keys": True})
         redis_verify_functionality = RedisVerify(**args)
         result = redis_verify_functionality.verify_single()
-        expected_result = { "keys_encountered": 1,
-                            "pattern": pattern_to_be_tested,
-                            "no_ttl_only": False,
-                            "print_keys": [pattern_to_be_tested]}
+        expected_result = {"keys_encountered": 1,
+                           "pattern": pattern_to_be_tested,
+                           "no_ttl_only": False,
+                           "print_keys": [pattern_to_be_tested]}
         assert result["keys_encountered"] == expected_result["keys_encountered"], f"Number of keys encountered differ. 1 key expected, found {result['keys_encountered']} key(s) instead."
 
     def test_single_nonexistent_key(self):
@@ -43,11 +43,12 @@ class TestRedisVerify(unittest.TestCase):
                      "print_keys": True})
         redis_verify_functionality = RedisVerify(**args)
         result = redis_verify_functionality.verify_single()
-        expected_result = { "keys_encountered": 0,
-                            "pattern": pattern_to_be_tested,
-                            "no_ttl_only": False,
-                            "print_keys": []}
+        expected_result = {"keys_encountered": 0,
+                           "pattern": pattern_to_be_tested,
+                           "no_ttl_only": False,
+                           "print_keys": []}
         assert result["keys_encountered"] == expected_result["keys_encountered"], f"Number of keys encountered differ. 0 key expected, found {result['keys_encountered']} key(s) instead."
 
     def tearDown(self):
         self.redis_client.flushall()
+        assert self.redis_client.dbsize() == 0, f"The Redis instance is expected to be empty, however, dbsize returns {self.redis_client.dbsize()}"

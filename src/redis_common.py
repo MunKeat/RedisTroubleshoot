@@ -56,5 +56,3 @@ class RedisCommon:
 
     def get_redis_pipeline(self):
         return self.__redis_pipeline
-
-
