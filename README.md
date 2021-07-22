@@ -1,3 +1,5 @@
+[![Python Linter](https://github.com/MunKeat/RedisTroubleshoot/actions/workflows/ci-python-linter.yml/badge.svg?branch=master)](https://github.com/MunKeat/RedisTroubleshoot/actions/workflows/ci-python-linter.yml)
+
 ## RedisTroubleshooter
 RedisTroubleshooter is a collection of Python scripts that is used to troubleshoot some of the more common Redis problem.
 
