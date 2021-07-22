@@ -19,5 +19,4 @@ jobs:
 
       - name: Lint with flake8
         run: |
-          flake8 --ignore=E501 ./src
-          flake8 --ignore=E501 ./test
+          flake8 --ignore=E501 .
