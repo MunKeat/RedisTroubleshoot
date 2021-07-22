@@ -1,0 +1,13 @@
+version: "3.8"
+
+services:
+  master:
+    build: ./docker/master
+    ports:
+      - "6379:6379"
+  slave:
+    build: ./docker/slave
+    depends_on:
+      - "master"
+    ports:
+      - "6380:6380"
