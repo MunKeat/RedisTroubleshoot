@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from redis import StrictRedis
+from redis import Redis
 from rediscluster import RedisCluster
 
 
@@ -18,7 +18,7 @@ class RedisCommon:
                 "port": port,
                 "socket_connect_timeout": self.DEFAULT_CONN_TIMEOUT
             }
-            self.__redis_client = StrictRedis(**redis_client_args)
+            self.__redis_client = Redis(**redis_client_args)
         elif cluster_mode:
             redis_client_args = {
                 "startup_nodes": [{"host": host, "port": port}],
@@ -56,3 +56,5 @@ class RedisCommon:
 
     def get_redis_pipeline(self):
         return self.__redis_pipeline
+
+
