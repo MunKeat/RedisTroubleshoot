@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import copy
+import time
 import unittest
 
 from src.redis_common import RedisCommon
@@ -32,8 +33,9 @@ class TestRedisVerify(unittest.TestCase):
         expected_result = {"keys_encountered": 1,
                            "pattern": pattern_to_be_tested,
                            "no_ttl_only": False,
-                           "print_keys": [pattern_to_be_tested]}
-        assert result["keys_encountered"] == expected_result["keys_encountered"], f"Number of keys encountered differ. 1 key expected, found {result['keys_encountered']} key(s) instead."
+                           "keys": ["HEAT"]}
+        assert result["keys_encountered"] == expected_result["keys_encountered"], f"Number of keys encountered differ. {result['keys_encountered']} key(s) expected, found {result['keys_encountered']} key(s) instead."
+        assert result["keys"] == expected_result["keys"], f"Keys encountered differ. {expected_result['keys']} key(s) expected, found {result['keys']} key(s) instead."
 
     def test_single_nonexistent_key(self):
         pattern_to_be_tested = "CHAFF"
@@ -46,8 +48,46 @@ class TestRedisVerify(unittest.TestCase):
         expected_result = {"keys_encountered": 0,
                            "pattern": pattern_to_be_tested,
                            "no_ttl_only": False,
-                           "print_keys": []}
-        assert result["keys_encountered"] == expected_result["keys_encountered"], f"Number of keys encountered differ. 0 key expected, found {result['keys_encountered']} key(s) instead."
+                           "keys": []}
+        assert result["keys_encountered"] == expected_result["keys_encountered"], f"Number of keys encountered differ. {result['keys_encountered']} key(s) expected, found {result['keys_encountered']} key(s) instead."
+        assert result["keys"] == expected_result["keys"], f"Keys encountered differ. {expected_result['keys']} key(s) expected, found {result['keys']} key(s) instead."
+
+    def test_pattern_existing_keys_no_ttl(self):
+        pattern_to_be_tested = "*EAT"
+        self.redis_client.expire("HEAT", 1)
+        time.sleep(1)
+        args = copy.deepcopy(self.COMMON_ARG)
+        args.update({"pattern": pattern_to_be_tested,
+                     "no_ttl_only": False,
+                     "print_keys": True})
+        redis_verify_functionality = RedisVerify(**args)
+        result = redis_verify_functionality.verify_pattern_without_ttl()
+        result["keys"] = [key.decode("utf-8") for key in result["keys"]]
+        expected_result = {"keys_encountered": 2,
+                           "pattern": pattern_to_be_tested,
+                           "no_ttl_only": False,
+                           "keys": ["EAT", "WHEAT"]}
+        assert result["keys_encountered"] == expected_result["keys_encountered"], f"Number of keys encountered differ. {result['keys_encountered']} key(s) expected, found {result['keys_encountered']} key(s) instead."
+        assert result["keys"] == expected_result["keys"], f"Keys encountered differ. {expected_result['keys']} key(s) expected, found {result['keys']} key(s) instead."
+
+    def test_pattern_existing_keys(self):
+        pattern_to_be_tested = "*EAT"
+        self.redis_client.expire("HEAT", 1)
+        time.sleep(1)
+        args = copy.deepcopy(self.COMMON_ARG)
+        args.update({"pattern": pattern_to_be_tested,
+                     "no_ttl_only": False,
+                     "print_keys": True})
+        redis_verify_functionality = RedisVerify(**args)
+        result = redis_verify_functionality.verify_pattern_naive()
+        result["keys"] = [key.decode("utf-8") for key in result["keys"]]
+        expected_result = {"keys_encountered": 2,
+                           "pattern": pattern_to_be_tested,
+                           "no_ttl_only": False,
+                           "keys": ["EAT", "WHEAT"]}
+        assert result["keys_encountered"] == expected_result["keys_encountered"], f"Number of keys encountered differ. {result['keys_encountered']} key(s) expected, found {result['keys_encountered']} key(s) instead."
+        assert result["keys"] == expected_result["keys"], f"Keys encountered differ. {expected_result['keys']} key(s) expected, found {result['keys']} key(s) instead."
+
 
     def tearDown(self):
         self.redis_client.flushall()

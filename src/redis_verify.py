@@ -91,6 +91,8 @@ class RedisVerify(RedisCommon):
         if self.no_ttl_only and self.redis_client.ttl(self.pattern) != self.NO_TTL_SET:
             keys_encountered = 0
             cumulative_keys = []
+        elif keys_encountered == 0:
+            cumulative_keys = []
         end_time = time.time()
         # Calculate statistics
         total_time = end_time - start_time
