@@ -62,11 +62,11 @@ class TestRedisVerify(unittest.TestCase):
                      "print_keys": True})
         redis_verify_functionality = RedisVerify(**args)
         result = redis_verify_functionality.verify_pattern_without_ttl()
-        result["keys"] = [key.decode("utf-8") for key in result["keys"]]
+        result["keys"] = sorted([key.decode("utf-8") for key in result["keys"]])
         expected_result = {"keys_encountered": 2,
                            "pattern": pattern_to_be_tested,
                            "no_ttl_only": False,
-                           "keys": ["EAT", "WHEAT"]}
+                           "keys": sorted(["EAT", "WHEAT"])}
         assert result["keys_encountered"] == expected_result["keys_encountered"], f"Number of keys encountered differ. {result['keys_encountered']} key(s) expected, found {result['keys_encountered']} key(s) instead."
         assert result["keys"] == expected_result["keys"], f"Keys encountered differ. {expected_result['keys']} key(s) expected, found {result['keys']} key(s) instead."
 
@@ -80,11 +80,11 @@ class TestRedisVerify(unittest.TestCase):
                      "print_keys": True})
         redis_verify_functionality = RedisVerify(**args)
         result = redis_verify_functionality.verify_pattern_naive()
-        result["keys"] = [key.decode("utf-8") for key in result["keys"]]
+        result["keys"] = sorted([key.decode("utf-8") for key in result["keys"]])
         expected_result = {"keys_encountered": 2,
                            "pattern": pattern_to_be_tested,
                            "no_ttl_only": False,
-                           "keys": ["EAT", "WHEAT"]}
+                           "keys": sorted(["EAT", "WHEAT"])}
         assert result["keys_encountered"] == expected_result["keys_encountered"], f"Number of keys encountered differ. {result['keys_encountered']} key(s) expected, found {result['keys_encountered']} key(s) instead."
         assert result["keys"] == expected_result["keys"], f"Keys encountered differ. {expected_result['keys']} key(s) expected, found {result['keys']} key(s) instead."
 
