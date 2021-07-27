@@ -2,6 +2,7 @@
 import time
 
 from argparse import ArgumentParser
+from pprint import pprint
 from src.redis_common import RedisCommon
 
 
@@ -118,7 +119,7 @@ class RedisVerify(RedisCommon):
 
 
 def get_arguments():
-    parser = ArgumentParser(description="Check autoincrement status for all database")
+    parser = ArgumentParser(description="Check keys available in the Redis instance")
     parser.add_argument("--host", type=str, required=True, help="Redis instance / cluster endpoint")
     parser.add_argument("--port", type=str, required=False, help="Redis instance / cluster port")
     # Check if cluster mode or not
@@ -131,18 +132,18 @@ def get_arguments():
                                     action="store_false",
                                     dest="cluster_mode",
                                     help="Indicate that Redis instance is cluster mode disabled")
-    parser.add_argument("--auth", type=int, required=False, help="Time to kill the connections")
-    parser.add_argument("--authentication", type=int, required=True, help="Time to kill the connections")
-    parser.add_argument("--pattern", type=int, required=True, help="Time to kill the connections")
-    parser.add_argument("--no_ttl_only", type=int, required=True, help="Time to kill the connections")
-    parser.add_argument("--print_keys", type=int, required=True, help="Time to kill the connections")
+    parser.add_argument("--authentication", type=int, required=False, help="Authentication, if required by the Redis instance")
+    parser.add_argument("--pattern", type=int, required=True, help="Pattern to match desired key(s)")
+    parser.add_argument("--no_ttl_only", type=int, required=True, help="Key(s) without TTL only")
+    parser.add_argument("--print_keys", action="store_true", required=False, help="Print key(s)")
     return parser.parse_args()
 
 
 def main():
     args = get_arguments()
     task = RedisVerify(**vars(args))
-    task.execute()
+    result = task.execute()
+    pprint(result)
 
 
 if __name__ == "__main__":
