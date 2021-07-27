@@ -132,9 +132,9 @@ def get_arguments():
                                     action="store_false",
                                     dest="cluster_mode",
                                     help="Indicate that Redis instance is cluster mode disabled")
-    parser.add_argument("--authentication", type=int, required=False, help="Authentication, if required by the Redis instance")
-    parser.add_argument("--pattern", type=int, required=True, help="Pattern to match desired key(s)")
-    parser.add_argument("--no_ttl_only", type=int, required=True, help="Key(s) without TTL only")
+    parser.add_argument("--authentication", type=str, required=False, help="Authentication required for Redis")
+    parser.add_argument("--pattern", type=str, required=True, help="Pattern to match desired key(s)")
+    parser.add_argument("--no_ttl_only", action="store_true", required=False, help="Check keys without TTL")
     parser.add_argument("--print_keys", action="store_true", required=False, help="Print key(s)")
     return parser.parse_args()
 
