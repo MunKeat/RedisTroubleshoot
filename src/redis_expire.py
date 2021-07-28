@@ -3,7 +3,7 @@ import time
 
 from argparse import ArgumentParser
 from pprint import pprint
-from src.redis_common import RedisCommon
+from redis_common import RedisCommon
 
 DEFAULT_REDIS_PORT = 6379
 
