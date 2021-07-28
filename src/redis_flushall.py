@@ -2,7 +2,7 @@
 """Useful for Redis cluster with multiple master nodes
    as opposed to running FLUSHALL through redis-cli"""
 from argparse import ArgumentParser
-from src.redis_common import RedisCommon
+from redis_common import RedisCommon
 
 DEFAULT_REDIS_PORT = 6379
 
